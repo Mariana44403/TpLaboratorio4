@@ -101,7 +101,8 @@ export default {
         try {
           // Verificar si el usuario tiene préstamos asociados
           const response = await axios.get(
-            `api/usuario/${this.filaSeleccionada.id}/tienePrestamosActivos`);
+            `api/usuario/${this.filaSeleccionada.id}/tienePrestamosActivos`
+          );
 
           if (response.data) { // Si tiene préstamos asociados
             this.mensajePrestamos = "Este usuario tiene préstamos activos y no puede eliminarse.";
@@ -109,7 +110,7 @@ export default {
             this.mostrarDialogoEliminacion = false; // Ocultar el diálogo de eliminación
           } else {
             // No tiene prestamos asociados 
-            this.mensajeConfirmacion = "¿Desea eliminar este libro?";
+            this.mensajeConfirmacion = "¿Desea eliminar este usuario?";
             this.permiteEliminacion = true; 
             this.mostrarDialogoPrestamos = false; // No mostrar el diálogo de préstamo
             this.mostrarDialogoEliminacion = true; // Mostrar el diálogo de eliminación
@@ -155,18 +156,18 @@ export default {
         this.$router.push(`/editarUsuario/${this.filaSeleccionada.id}`);
       }
     },
-    filtrarUsuario() {
+    async filtrarUsuario() {
       const query = this.searchQuery.toLowerCase();
-      this.usuariosFiltrados = this.usuarios.filter((usuario) => {
-        return (
-          usuario.username.toLowerCase().includes(query) ||
-          usuario.firstname.toLowerCase().includes(query) ||
-          usuario.lastname.toLowerCase().includes(query) ||
-          usuario.phone.toLowerCase().includes(query) ||
-          usuario.role.toLowerCase().includes(query)
-        );
-      });
-    },
+
+      try {
+        const response = await axios.get(`api/usuario/search`, {
+          params: { query }
+        });
+        this.usuariosFiltrados = response.data;
+      } catch(error) {
+        console.error("Error al filtrar usuarios: ", error);
+      }
+    }
   },
 };
 </script>  

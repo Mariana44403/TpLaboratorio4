@@ -1,9 +1,12 @@
 package com.final_laboratorio4.final_laboratorio4.controllers;
 
 import com.final_laboratorio4.final_laboratorio4.DTO.PrestamoDTO;
+import com.final_laboratorio4.final_laboratorio4.models.Libro;
 import com.final_laboratorio4.final_laboratorio4.models.Prestamo;
 import com.final_laboratorio4.final_laboratorio4.repositories.PrestamoRepository;
 import com.final_laboratorio4.final_laboratorio4.services.PrestamoService;
+import com.final_laboratorio4.final_laboratorio4.services.implementsService.ImplPrestamo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,32 +19,40 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("api/prestamo")
+@RequiredArgsConstructor
 public class PrestamoController {
-    @Autowired
-    private PrestamoRepository prestamoRepository;
-    @Autowired
-    private PrestamoService prestamoService;
+    private final PrestamoRepository prestamoRepository;
+    private final ImplPrestamo implPrestamo;
+
     @GetMapping
     public List<Prestamo> getAllPrestamo() {
         return prestamoRepository.findAll();
     }
+
     @GetMapping("/conIds")
     public List<PrestamoDTO> getAllPrestamos(){
-        return prestamoService.getAllPrestamos();
+        return implPrestamo.getAllPrestamos();
     }
+
     @GetMapping("/{id}")
     public PrestamoDTO getPrestamoById(@PathVariable Long id) {
-        return prestamoService.getPrestamoById(id);
+        return implPrestamo.getPrestamoById(id);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Prestamo>> buscarPrestamo(@RequestParam("query") String query) {
+        List<Prestamo> prestamosFiltrados = implPrestamo.buscarPorQuery(query);
+        return new ResponseEntity<>(prestamosFiltrados, HttpStatus.OK);
     }
     @PostMapping
     public Prestamo createPrestamo(@RequestBody PrestamoDTO prestamoDTO){
-        Prestamo nuevoPrestamo = prestamoService.CrearPrestamo(prestamoDTO);
+        Prestamo nuevoPrestamo = implPrestamo.crearPrestamo(prestamoDTO);
         return prestamoRepository.save(nuevoPrestamo);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarPrestamo(@PathVariable Long id) {
         try {
-            prestamoService.eliminarPrestamo(id); // Llama al servicio para eliminar el préstamo
+            implPrestamo.eliminarPrestamo(id); // Llama al servicio para eliminar el préstamo
             return ResponseEntity.noContent().build(); // Devuelve respuesta HTTP 204 (No Content)
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(null); // Devuelve respuesta HTTP 404 si el préstamo no se encuentra
@@ -53,7 +64,7 @@ public class PrestamoController {
     @GetMapping("/{id}/activo")
     public ResponseEntity<Boolean> esPrestamoActivo(@PathVariable Long id) {
         try {
-            boolean activo = prestamoService.esPrestamoActivo(id);
+            boolean activo = implPrestamo.esPrestamoActivo(id);
             return ResponseEntity.ok(activo);
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false); // El préstamo no fue encontrado
@@ -67,7 +78,7 @@ public class PrestamoController {
             @RequestBody PrestamoDTO prestamoDTO
     ) {
         // Llamar al servicio para modificar el préstamo
-        ResponseEntity<PrestamoDTO> response = prestamoService.modificarPrestamo(id, prestamoDTO);
+        ResponseEntity<PrestamoDTO> response = implPrestamo.modificarPrestamo(id, prestamoDTO);
 
         return response; // Devolver la respuesta del servicio
     }
@@ -79,7 +90,7 @@ public class PrestamoController {
     ) {
         LocalDate fechaDevolucion = LocalDate.parse(body.get("fecha_devolucion"));
 
-        boolean resultado = prestamoService.devolverPrestamo(id, fechaDevolucion);
+        boolean resultado = implPrestamo.devolverPrestamo(id, fechaDevolucion);
         if (resultado) {
             return ResponseEntity.ok("Préstamo devuelto con éxito.");
         } else {

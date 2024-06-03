@@ -7,6 +7,7 @@ import com.final_laboratorio4.final_laboratorio4.models.Libro;
 import com.final_laboratorio4.final_laboratorio4.models.Prestamo;
 import com.final_laboratorio4.final_laboratorio4.repositories.LibroRepository;
 import com.final_laboratorio4.final_laboratorio4.repositories.PrestamoRepository;
+import com.final_laboratorio4.final_laboratorio4.services.implementsService.ImplPrestamo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,12 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PrestamoService {
-    @Autowired
-    private LibroRepository libroRepository;
-    @Autowired
-    private UserRepository usuarioRepository;
-    @Autowired
-    private PrestamoRepository prestamoRepository;
-    public Prestamo CrearPrestamo(PrestamoDTO prestamoDTO) {
+public class PrestamoService implements ImplPrestamo {
+    private final LibroRepository libroRepository;
+    private final UserRepository usuarioRepository;
+    private final PrestamoRepository prestamoRepository;
+
+    public Prestamo crearPrestamo(PrestamoDTO prestamoDTO) {
         Prestamo nuevoPrestamo = new Prestamo();
 
         // Asignar el libro utilizando el ID del DTO
@@ -156,6 +155,11 @@ public class PrestamoService {
         PrestamoDTO resultado = convertirPrestamoDTO(prestamoModificado);
 
         return ResponseEntity.ok(resultado); // Respuesta exitosa
+    }
+
+    @Override
+    public List<Prestamo> buscarPorQuery(String query) {
+        return prestamoRepository.buscarPorQuery(query);
     }
 
 

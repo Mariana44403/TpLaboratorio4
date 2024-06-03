@@ -6,11 +6,11 @@
       <div class="action-buttons">
         <button @click="agregarLibro">Agregar</button>
         <input
-          type="text"
-          placeholder="Buscar por título, autor o género"
-          v-model="searchQuery"
-          @input="filtrarLibros"
-        />
+  type="text"
+  placeholder="Buscar por título, autor o género"
+  v-model="searchQuery"
+  @input="filtrarLibros"
+/>
         <button
           :disabled="!filaSeleccionada"
           @click="editarLibroSeleccionado"
@@ -169,17 +169,18 @@ export default {
         this.$router.push(`/editarLibro/${this.filaSeleccionada.id}`);
       }
     },
-    filtrarLibros() {
-      const query = this.searchQuery.toLowerCase();
+    async filtrarLibros() {
+    const query = this.searchQuery.toLowerCase();
 
-      this.librosFiltrados = this.libros.filter((libro) => {
-        return (
-          libro.titulo.toLowerCase().includes(query) ||
-          libro.autor.toLowerCase().includes(query) ||
-          libro.genero.toLowerCase().includes(query)
-        );
+    try {
+      const response = await axios.get(`api/libro/search`, {
+        params: { query }
       });
-    },
+      this.librosFiltrados = response.data;
+    } catch (error) {
+      console.error("Error al filtrar libros:", error);
+    }
+  },
   },
 };
 </script>

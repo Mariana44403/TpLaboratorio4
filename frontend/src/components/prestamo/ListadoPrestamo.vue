@@ -8,7 +8,11 @@
         <input type="text" placeholder="Buscar usuario, libro, fecha" v-model="searchQuery" @input="filtrarPrestamo"/>
         <button :disabled="!filaSeleccionada" @click="editarPrestamo">Editar</button>
         <button :disabled="!filaSeleccionada" @click="verificarYMostrarConfirmacion">Eliminar</button>
-        <button @click="devolverPrestamo">Realizar devolución</button>
+        <button 
+          :disabled="!filaSeleccionada || esDevuelto(filaSeleccionada.estado)" 
+          @click="devolverPrestamo">
+          Realizar devolución
+        </button>
       </div>
     </div>
 
@@ -141,20 +145,17 @@ export default {
         }
       }
     },
-    filtrarPrestamo() {
+    async filtrarPrestamo() {
       const query = this.searchQuery.toLowerCase();
-      this.prestamosFiltrados = this.prestamos.filter((prestamo) => {
-        const usuarioNombre = prestamo.usuario?.username?.toLowerCase() || ""; // Asegúrate de que usuario existe
-        const libroTitulo = prestamo.libro?.titulo?.toLowerCase() || ""; // Asegúrate de que libro existe
-        const fechaPrestamo = prestamo.fecha_prestamo.toLowerCase();
-        const fechaDevolucion = prestamo.fecha_devolucion?.toLowerCase() || "";
-        return (
-          usuarioNombre.includes(query) ||
-          libroTitulo.includes(query) ||
-          fechaPrestamo.includes(query) ||
-          fechaDevolucion.includes(query)
-        );
-      });
+
+      try {
+        const response = await axios.get(`api/prestamo/search`, {
+          params: { query }
+        });
+        this.prestamosFiltrados = response.data;
+      } catch (error) {
+        console.error("Error al filtrar prestamos: ", error);
+      }
     },
     cancelarEliminacion() {
       this.mostrarDialogoEliminacion = false; 
@@ -167,6 +168,9 @@ export default {
       if (this.$refs.dialogoPrestamos) {
         this.$refs.dialogoPrestamos.close();
       }
+    },
+    esDevuelto(estado) {
+      return estado && estado.toLowerCase() === 'devuelto';
     }
   }
 };

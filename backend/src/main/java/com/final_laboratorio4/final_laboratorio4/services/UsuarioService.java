@@ -7,6 +7,7 @@ import com.final_laboratorio4.final_laboratorio4.models.Usuario;
 import com.final_laboratorio4.final_laboratorio4.models.Prestamo;
 import com.final_laboratorio4.final_laboratorio4.repositories.LibroRepository;
 import com.final_laboratorio4.final_laboratorio4.repositories.PrestamoRepository;
+import com.final_laboratorio4.final_laboratorio4.services.implementsService.ImplUsuario;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioService {
+public class UsuarioService implements ImplUsuario {
     // Dependencias
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -116,6 +117,11 @@ public class UsuarioService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Usuario> buscarPorQuery(String query) {
+        return userRepository.buscarPorQuery(query);
     }
     /*
     // Dependencias

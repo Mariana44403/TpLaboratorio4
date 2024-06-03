@@ -5,22 +5,24 @@ import com.final_laboratorio4.final_laboratorio4.models.Libro;
 import com.final_laboratorio4.final_laboratorio4.models.Prestamo;
 import com.final_laboratorio4.final_laboratorio4.repositories.LibroRepository;
 import com.final_laboratorio4.final_laboratorio4.repositories.PrestamoRepository;
+import com.final_laboratorio4.final_laboratorio4.services.implementsService.ImplLibro;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
-public class LibroService {
+@RequiredArgsConstructor
+public class LibroService implements ImplLibro {
 
-    @Autowired
-    private LibroRepository libroRepository;
-    @Autowired
-    private PrestamoRepository prestamoRepository;
+    private final LibroRepository libroRepository;
+    private final PrestamoRepository prestamoRepository;
 
-    public LibroDTO libroALibroDTO(Libro libro) {
+    private LibroDTO libroALibroDTO(Libro libro) {
         LibroDTO libroDTO = new LibroDTO();
         libroDTO.setId(libro.getId());
         libroDTO.setTitulo(libro.getTitulo());
@@ -31,6 +33,8 @@ public class LibroService {
         libroDTO.setEstado(libro.getEstado());
         return libroDTO;
     }
+
+    @Override
     public LibroDTO crearLibro(LibroDTO libroDTO) {
         Libro libro = new Libro();
         libro.setTitulo(libroDTO.getTitulo());
@@ -49,29 +53,21 @@ public class LibroService {
         return libroALibroDTO(libroGuardado);
     }
 
-    // Verifica si un libro tiene préstamos activos
+    @Override
     public boolean tienePrestamosActivos(Long libroId) {
         List<Prestamo> prestamosActivos = prestamoRepository.findByLibroIdAndEstado(libroId, "Prestado");
         return !prestamosActivos.isEmpty();
     }
 
+    @Override
     public LibroDTO obtenerLibroPorId(Long id) {
-        Libro libro =  libroRepository.findById(id)
+        Libro libro = libroRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Libro con ID: " + id + " no encontrado"));
 
-        LibroDTO libroDTO = new LibroDTO();
-        libroDTO.setId(libro.getId());
-        libroDTO.setTitulo(libro.getTitulo());
-        libroDTO.setAutor(libro.getAutor());
-        libroDTO.setGenero(libro.getGenero());
-        libroDTO.setNum_pagina(libro.getNum_pagina());
-        libroDTO.setSinopsis(libro.getSinopsis());
-        libroDTO.setEstado(libro.getEstado());
-
-        return libroDTO;
+        return libroALibroDTO(libro);
     }
 
-
+    @Override
     @Transactional
     public void eliminarLibro(Long id) {
         try {
@@ -96,7 +92,8 @@ public class LibroService {
         }
     }
 
-    public LibroDTO modificarLibro (Long id, LibroDTO libroDTO) {
+    @Override
+    public LibroDTO modificarLibro(Long id, LibroDTO libroDTO) {
         Libro libro = libroRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Libro con ID: " + id + " no encontrado "));
 
@@ -116,6 +113,11 @@ public class LibroService {
         return libroALibroDTO(libroModificado);
     }
 
+    public List<Libro> buscarLibros(String query) {
+        return libroRepository.buscarPorQuery(query);
+    }
+
+    @Override
     public List<LibroDTO> obtenerTodosLosLibros() {
         List<Libro> libros = libroRepository.findAll(); // Obtiene todos los registros del repositorio
         // Convertir a DTO
