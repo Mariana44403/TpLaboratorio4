@@ -48,12 +48,12 @@ export default {
   methods: {
     async cargarLibro(libroId) {
       try {
-        const response = await axios.get(`api/libro/${libroId}`); // Intenta obtener el libro
-        console.log("Respuesta del servidor:", response); // Muestra la respuesta
-        this.libro = response.data; // Almacena los datos del libro
+        const response = await axios.get(`api/libro/${libroId}`); // obtiene al libro
+        console.log("Respuesta del servidor:", response); // muestra la respuesta
+        this.libro = response.data; // almacena los datos del libro
         console.log(this.libro);
       } catch (error) {
-        console.error('Error cargando el libro:', error); // Muestra detalles del error
+        console.error('Error cargando el libro:', error); 
       }
     },
     async actualizarLibro() {
@@ -66,9 +66,9 @@ export default {
         this.$router.push('/books');
       } catch (error) {
         if (error.response && error.response.status === 403) {
-          console.error('Error: Acceso prohibido. Verifique sus permisos.'); // Mensaje para error 403
+          console.error('Error: Acceso prohibido. Verifique sus permisos.'); 
         } else {
-          console.error('Error actualizando el libro:', error); // Otros errores
+          console.error('Error actualizando el libro:', error); 
         }
       }
     },

@@ -18,7 +18,7 @@
 
 <script>
 import axios from '../../axios';
-import store from '@/store/vuex'; // Para trabajar con Vuex
+import store from '@/store/vuex'; 
 
 export default {
   data() {
@@ -36,9 +36,9 @@ export default {
           password: this.password,
         });
         const token = response.data.token;
-        // Guarda el token 
+        // guarda el token 
         localStorage.setItem('token', token);
-        // Actualiza el estado de autenticación en Vuex. 
+        // actualiza el estado de autenticación en Vuex. 
         // setAuthentication es una mutación de Vuex q marca al usuario como autenticado.
         store.commit('setAuthentication', true);
         this.$router.push('/');

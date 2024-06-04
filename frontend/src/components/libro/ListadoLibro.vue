@@ -1,16 +1,15 @@
 <template>
   <div class="book-list-container">
-    <!-- Encabezado -->
     <div class="header">
       <h2>Lista de libros</h2>
       <div class="action-buttons">
         <button @click="agregarLibro">Agregar</button>
         <input
-  type="text"
-  placeholder="Buscar por título, autor o género"
-  v-model="searchQuery"
-  @input="filtrarLibros"
-/>
+          type="text"
+          placeholder="Buscar por título, autor o género"
+          v-model="searchQuery"
+          @input="filtrarLibros"
+        />
         <button
           :disabled="!filaSeleccionada"
           @click="editarLibroSeleccionado"
@@ -26,7 +25,6 @@
       </div>
     </div>
 
-    <!-- Tabla de libros -->
     <table>
       <thead>
         <tr>
@@ -38,7 +36,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Crea filas dinámicamente para cada libro en librosFiltrados, proporciona un evento de clic para seleccionar la fila -->
         <tr
           v-for="libro in librosFiltrados"
           :key="libro.id"
@@ -54,7 +51,7 @@
       </tbody>
     </table>
 
-    <!-- Ventana para libros que pueden ser eliminados -->
+    <!-- ventana para libros que pueden ser eliminados -->
     <dialog ref="dialogoEliminacion" v-if="mostrarDialogoEliminacion">
       <p>{{ mensajeConfirmacion }}</p>
       <div class="dialog-buttons">
@@ -68,7 +65,7 @@
       </div>
     </dialog>
 
-    <!-- Ventana para libros que tienen préstamos asociados -->
+    <!-- ventana para libros que tienen préstamos asociados -->
     <dialog ref="dialogoPrestamos" v-if="mostrarDialogoPrestamos">
       <p>{{ mensajePrestamos }}</p>
       <div class="dialog-buttons">
@@ -103,13 +100,13 @@ export default {
       try {
         const response = await axios.get('api/libro');
         this.libros = response.data;
-        this.librosFiltrados = this.libros; // Inicializa la lista de libros filtrados
+        this.librosFiltrados = this.libros; // inicializa la lista de libros filtrados
       } catch (error) {
         console.error("Error al cargar libros:", error);
       }
     },
     seleccionarFila(libro) {
-      this.filaSeleccionada = libro; // Guardar el libro seleccionado
+      this.filaSeleccionada = libro; // guardar el libro seleccionado
     },
     async verificarYMostrarConfirmacion() {
       if (this.filaSeleccionada) {
@@ -117,18 +114,18 @@ export default {
           const response = await axios.get(
             `api/libro/${this.filaSeleccionada.id}/tienePrestamos`);
 
-          if (response.data) { // Si tiene préstamos asociados
+          if (response.data) { // si tiene préstamos asociados
             this.mensajePrestamos = "Este libro tiene préstamos activos y no puede eliminarse.";
-            this.mostrarDialogoPrestamos = true; // Mostrar el diálogo de préstamo
-            this.mostrarDialogoEliminacion = false; // Ocultar el diálogo de eliminación
+            this.mostrarDialogoPrestamos = true; // mostrar el diálogo de préstamo
+            this.mostrarDialogoEliminacion = false; // ocultar el diálogo de eliminación
           } else {
             this.mensajeConfirmacion = "¿Desea eliminar este libro?";
             this.permiteEliminacion = true; 
-            this.mostrarDialogoPrestamos = false; // No mostrar el diálogo de préstamo
-            this.mostrarDialogoEliminacion = true; // Mostrar el diálogo de eliminación
+            this.mostrarDialogoPrestamos = false; 
+            this.mostrarDialogoEliminacion = true; 
             this.$nextTick(() => {
               if (this.$refs.dialogoEliminacion) {
-                this.$refs.dialogoEliminacion.showModal(); // Mostrar el diálogo
+                this.$refs.dialogoEliminacion.showModal(); // mostrar el diálogo
               }
             });
           }
@@ -143,7 +140,7 @@ export default {
           await axios.delete(
             `api/libro/${this.filaSeleccionada.id}`);
           this.cancelarEliminacion();
-          await this.cargarLibros(); // Recargar después de eliminar un libro
+          await this.cargarLibros(); // recargar después de eliminar un libro
         } catch (error) {
           console.error("Error al eliminar el libro:", error);
         }
@@ -191,7 +188,7 @@ export default {
 
 .header {
   display: flex;
-  justify-content: space-between; /* Para alinear el título y los botones */
+  justify-content: space-between; 
   align-items: center;
 }
 
@@ -201,7 +198,7 @@ export default {
 }
 
 .action-buttons button {
-  margin-left: 10px; /* Espaciado entre botones */
+  margin-left: 10px; 
   padding: 10px 10px; 
   background-color: #1F618D; 
   color: white;
@@ -240,12 +237,12 @@ th {
 }
 
 .selected {
-  background-color: #E5E8E8; /* Para resaltar la fila seleccionada */
+  background-color: #E5E8E8; 
 }
 
 dialog {
   display: flex;
-  flex-direction: column; /* Los elementos dentro del diálogo se alinean verticalmente */
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
   background-color: white;
@@ -256,16 +253,16 @@ dialog {
 }
 
 .dialog-buttons {
-  display: flex; /* Alineación horizontal */
-  flex-direction: row; /* Botones uno al lado del otro */
-  justify-content: space-between; /* Espaciado uniforme entre botones */
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-between; 
 }
 
 dialog button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background-color: #f44336; /* Color rojo para el botón de eliminación */
+  background-color: #f44336; 
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -278,15 +275,15 @@ dialog button {
 }
 
 .dialog-no:hover {
-  background-color:#BFC9CA; /* Cambia el color cuando se pasa el ratón */
+  background-color:#BFC9CA; 
 }
 
 .dialog-si:hover {
-  background-color:#C0392B; /* Cambia el color cuando se pasa el ratón */
+  background-color:#C0392B; 
 }
 
 .dialog-buttons button {
-  margin: 0 10px; /* Margen entre botones para mantener el espacio */
+  margin: 0 10px; 
 }
 
 </style>

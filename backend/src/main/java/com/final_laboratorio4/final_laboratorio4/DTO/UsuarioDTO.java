@@ -1,15 +1,14 @@
 package com.final_laboratorio4.final_laboratorio4.DTO;
 
 import com.final_laboratorio4.final_laboratorio4.models.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Setter
+@Getter
 public class UsuarioDTO {
     private Integer id;
     private String username;

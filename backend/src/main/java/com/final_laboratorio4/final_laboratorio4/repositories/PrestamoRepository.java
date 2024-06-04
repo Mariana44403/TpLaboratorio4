@@ -12,9 +12,12 @@ import java.util.List;
 @Repository
 public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     List<Prestamo> findByUsuarioId(Long idUsuario);
+
     List<Prestamo> findByLibroId(Long idLibro);
+
     List<Prestamo> findByLibroIdAndEstado(Long libroId, String estado);
-    List<Prestamo> findByUsuarioIdAndEstado(Long usuarioId, String estado);
+
+    //List<Prestamo> findByUsuarioIdAndEstado(Long usuarioId, String estado);
 
     @Query("SELECT p FROM Prestamo p JOIN p.usuario u JOIN p.libro l " +
             "WHERE LOWER(u.username) LIKE LOWER(CONCAT(:query, '%')) " +

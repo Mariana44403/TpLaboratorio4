@@ -16,7 +16,7 @@
         <select v-model="libroSeleccionado" required>
           <option value="" disabled selected>Seleccionar un libro: </option>
           <option v-for="libro in libros" :key="libro.id" :value="libro.id">
-            {{ libro.titulo }}
+            {{ libro.titulo }} 
           </option>
         </select>
       </div>
@@ -42,15 +42,14 @@ export default {
     return {
       usuarios: [],
       libros: [],
-      usuarioSeleccionado: "", // Campo de selección para el usuario
-      libroSeleccionado: "", // Campo de selección para el libro
+      usuarioSeleccionado: "", 
+      libroSeleccionado: "", 
       fechaPrestamo: null,
       fechaDevolucion: null,
       estado: "",
       errorMessage: "",
     };
   },
-  // Este es un "hook" del ciclo de vida de Vue que se ejecuta cuando el componente se crea, antes de que se renderice por primera vez. En este caso, se utiliza para cargar datos iniciales. Usuario y Libros.
   async created() {
     await this.cargarUsuarios();
     await this.cargarLibros();
@@ -67,13 +66,10 @@ export default {
     },
     async cargarLibros() {
       try {
-        const response = await axios.get(
-          'api/libro');
-        
-        // Filtra los libros q tengan el estado "Disponible"
-        this.libros = response.data.filter(libro => libro.estado === "Disponible");
+        const response = await axios.get('/api/libro/disponibles');
+        this.libros = response.data;
       } catch (error) {
-        console.error("Error al cargar libros:", error);
+        console.error("Error al cargar los libros disponibles:", error);
       }
     },
     async agregarPrestamo() {

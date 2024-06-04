@@ -17,19 +17,15 @@ import java.util.Optional;
 public class AuthService {
 
     /* Dependencias */
-    private final AuthenticationManager authenticationManager; // Autentica credenciales de un usuario
-    private final JwtService jwtService; // Servicio q genera y valida tokens de autenticacion
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder; // Componente para cifrar contraseñas
+    private final PasswordEncoder passwordEncoder;
 
     public AuthResponse login(LoginRequest request) {
-        // Autentica las credenciales (usuario y contraseña) proporcionadas en LoginRequest
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        //  Busca el usuario
         UserDetails user = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        // Si la autenticacion es exitosa, genera un token JWT
         String token = jwtService.getToken(user);
-        // Retorna el token generado
         return AuthResponse.builder()
                 .token(token)
                 .build();
@@ -37,13 +33,11 @@ public class AuthService {
 
 
     public AuthResponse register(RegisterRequest request) {
-        // Verifica si ya existe un usuario con el mismo nombre, si existe lanza una excepcion
         Optional<Usuario> userOptional = userRepository.findByUsername(request.getUsername());
         if (userOptional.isPresent()) {
             throw new RuntimeException("Ya existe ese usuario");
         }
 
-        // Si el usuario no existe, lo crea con la informacion de RegisterRequest
         Usuario usuario = Usuario.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword())) // Cifra la contraseña
@@ -53,9 +47,8 @@ public class AuthService {
                 .role(Role.ADMINISTRADOR)
                 .build();
 
-        // Guarda el usuario
         userRepository.save(usuario);
-        // Genera y retorna el token
+
         return AuthResponse.builder()
                 .token(jwtService.getToken(usuario))
                 .build();

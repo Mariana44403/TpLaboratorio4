@@ -1,14 +1,15 @@
 package com.final_laboratorio4.final_laboratorio4.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Setter
+@Getter
 public class PrestamoDTO {
     private Long id;
     private Integer id_usuario;

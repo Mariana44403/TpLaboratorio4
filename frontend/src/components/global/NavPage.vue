@@ -3,7 +3,7 @@
     <div class="nav-container">
       <h3 class="nav-brand">Biblioteca</h3>
       <div class="nav-links">
-        <!-- Enlaces para usuarios autenticados -->
+        <!-- enlaces para usuarios autenticados -->
         <ul v-if="isAuthenticated">
           <li>
             <router-link to="/" class="nav-link">Inicio</router-link>
@@ -21,7 +21,7 @@
             <a href="javascript:void(0)" @click="handleLogout" class="nav-link">Cerrar sesión</a>
           </li>
         </ul>
-        <!-- Enlaces para usuarios no autenticados -->
+        <!-- enlaces para usuarios no autenticados -->
         <ul v-else>
           <li>
             <router-link to="/login" class="nav-link">Iniciar sesión</router-link>
@@ -41,13 +41,13 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'NavBar',
   computed: {
-    ...mapGetters(['isAuthenticated']), // Obtiene el estado de autenticación desde Vuex
+    ...mapGetters(['isAuthenticated']), // obtiene el estado de autenticación desde Vuex
   },
   methods: {
     handleLogout() {
-      localStorage.removeItem('token'); // Eliminar el token para cerrar sesión
-      this.$store.dispatch('logout'); // Acción de Vuex para cerrar sesión
-      this.$router.push('/login'); // Redirigir a la página de login
+      localStorage.removeItem('token'); // eliminar el token para cerrar sesión
+      this.$store.dispatch('logout'); // acción de Vuex para cerrar sesión
+      this.$router.push('/login'); // redirigir a la página de login
     },
   },
 };

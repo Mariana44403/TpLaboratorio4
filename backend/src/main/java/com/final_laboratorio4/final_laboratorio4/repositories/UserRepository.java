@@ -11,8 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<Usuario, Integer> {
-    // Método para encontrar un usuario por su nombre de usuario
-    Optional<Usuario> findByUsername(String username);  // Usar el nombre correcto
+    Optional<Usuario> findByUsername(String username);
 
     Optional<Usuario> findById(Long id);
 
@@ -23,5 +22,4 @@ public interface UserRepository extends JpaRepository<Usuario, Integer> {
             "OR LOWER(u.phone) LIKE LOWER(CONCAT(:query, '%')) " +
             "OR LOWER(u.role) LIKE LOWER(CONCAT(:query, '%'))")
     List<Usuario> buscarPorQuery(@Param("query") String query);
-
 }

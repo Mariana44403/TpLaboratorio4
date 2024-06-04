@@ -49,24 +49,21 @@ export default {
     };
   },
   methods: {
-    // Función asíncrona, que utiliza axios para realizar una solicitud HTTP de tipo POST a un servidor
+    // función asíncrona, que utiliza axios para realizar una solicitud HTTP de tipo POST a un servidor
     async agregarLibro() {
       try {
         // Hacer una solicitud POST para agregar un nuevo libro
         const response = await axios.post(
-          '/api/libro', // Endpoint para agregar libros
-          this.libro // Datos del libro a enviar
+          '/api/libro', // endpoint para agregar libros
+          this.libro // datos del libro a enviar
         );
         console.log('Libro agregado:', response.data);
-        // Redirigir a la lista de libros después de guardar
+        // redirigir a la lista de libros después de guardar
         this.$router.push('/books'); 
       } catch (error) {
-        // Manejo de errores
         if (error.response && error.response.status === 400) {
-          // Error específico para código 400
           this.errorMessage = error.response.data;
         } else {
-          // Error genérico para otros problemas
           this.errorMessage = 'Error durante la operación.';
         }
       }

@@ -10,11 +10,18 @@ import java.util.List;
 
 public interface ImplPrestamo {
     Prestamo crearPrestamo(PrestamoDTO prestamoDTO);
+
     List<PrestamoDTO> getAllPrestamos();
+
     PrestamoDTO getPrestamoById(Long idPrestamo);
+
     void eliminarPrestamo(Long id);
+
     boolean esPrestamoActivo(Long idPrestamo);
+
     boolean devolverPrestamo(Long idPrestamo, LocalDate fechaDevolucion);
+
     ResponseEntity<PrestamoDTO> modificarPrestamo(Long id, PrestamoDTO prestamoDTO);
+
     List<Prestamo> buscarPorQuery(String query);
 }

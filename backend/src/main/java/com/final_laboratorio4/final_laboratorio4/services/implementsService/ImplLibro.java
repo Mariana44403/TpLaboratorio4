@@ -7,10 +7,18 @@ import java.util.List;
 
 public interface ImplLibro {
     LibroDTO crearLibro(LibroDTO libroDTO);
+
     boolean tienePrestamosActivos(Long libroId);
+
     List<Libro> buscarLibros(String query);
+
     LibroDTO obtenerLibroPorId(Long id);
+
     void eliminarLibro(Long id);
+
+    List<Libro> obtenerLibrosDisponibles();
+
     LibroDTO modificarLibro(Long id, LibroDTO libroDTO);
+
     List<LibroDTO> obtenerTodosLosLibros();
 }

@@ -19,13 +19,11 @@ public class ApplicationConfig {
 
     private final UserRepository userRepository;
 
-    // Se utiliza para autenticar a los usuarios
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
-    // Autentica a los usuario con UserDetailsService y con PasswordEncoder
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -34,17 +32,14 @@ public class ApplicationConfig {
         return authenticationProvider;
     }
 
-    // Cifra las contraseñas antes de almacenarlas
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Uso de BCrypt
+        return new BCryptPasswordEncoder();
     }
 
-    // Obtiene detalles del usuario por nombre de usuario
     @Bean
     public UserDetailsService userDetailService() {
         return username -> userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("USER NOT FOUND"));
     }
-
 }

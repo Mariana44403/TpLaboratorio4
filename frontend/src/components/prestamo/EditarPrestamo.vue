@@ -43,25 +43,25 @@ import axios from '../../axios';
 export default {
   data() {
     return {
-      usuarios: [], // Lista de usuarios para el select
-      libros: [],   // Lista de libros para el select
-      prestamo: {}, // Objeto préstamo para editar
-      errorMessage: "", // Para mensajes de error
+      usuarios: [], 
+      libros: [],   
+      prestamo: {}, 
+      errorMessage: "", 
     };
   },
   async created() {
-    await this.cargarUsuarios(); // Cargar usuarios
-    await this.cargarLibros();   // Cargar libros
-    const prestamoId = this.$route.params.id; // Obtener el ID del préstamo de la URL
+    await this.cargarUsuarios(); 
+    await this.cargarLibros();   
+    const prestamoId = this.$route.params.id; // obtiene el ID del préstamo de la URL
     if (prestamoId) {
-      await this.cargarPrestamo(prestamoId); // Cargar el préstamo a modificar
+      await this.cargarPrestamo(prestamoId); // carga el prestamo a modificar
     }
   },
   methods: {
     async cargarUsuarios() {
       try {
         const response = await axios.get('api/usuario');
-        this.usuarios = response.data; // Guarda los usuarios en la data
+        this.usuarios = response.data; // guarda los usuarios en la data
       } catch (error) {
         console.error("Error al cargar usuarios:", error);
       }
@@ -69,7 +69,7 @@ export default {
     async cargarLibros() {
       try {
         const response = await axios.get('api/libro');
-        this.libros = response.data; // Guarda los libros en la data
+        this.libros = response.data; 
       } catch (error) {
         console.error("Error al cargar libros:", error);
       }
@@ -77,7 +77,7 @@ export default {
     async cargarPrestamo(prestamoId) {
       try {
         const response = await axios.get(`api/prestamo/${prestamoId}`);
-        this.prestamo = response.data; // Guarda el préstamo en la data
+        this.prestamo = response.data;
       } catch (error) {
         console.error("Error al cargar el préstamo:", error);
         this.errorMessage = "No se pudo cargar el préstamo.";

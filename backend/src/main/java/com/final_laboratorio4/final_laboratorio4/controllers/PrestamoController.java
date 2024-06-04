@@ -21,8 +21,15 @@ import java.util.Map;
 @RequestMapping("api/prestamo")
 @RequiredArgsConstructor
 public class PrestamoController {
+
     private final PrestamoRepository prestamoRepository;
     private final ImplPrestamo implPrestamo;
+
+    @PostMapping
+    public Prestamo createPrestamo(@RequestBody PrestamoDTO prestamoDTO){
+        Prestamo nuevoPrestamo = implPrestamo.crearPrestamo(prestamoDTO);
+        return prestamoRepository.save(nuevoPrestamo);
+    }
 
     @GetMapping
     public List<Prestamo> getAllPrestamo() {
@@ -44,22 +51,6 @@ public class PrestamoController {
         List<Prestamo> prestamosFiltrados = implPrestamo.buscarPorQuery(query);
         return new ResponseEntity<>(prestamosFiltrados, HttpStatus.OK);
     }
-    @PostMapping
-    public Prestamo createPrestamo(@RequestBody PrestamoDTO prestamoDTO){
-        Prestamo nuevoPrestamo = implPrestamo.crearPrestamo(prestamoDTO);
-        return prestamoRepository.save(nuevoPrestamo);
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarPrestamo(@PathVariable Long id) {
-        try {
-            implPrestamo.eliminarPrestamo(id); // Llama al servicio para eliminar el préstamo
-            return ResponseEntity.noContent().build(); // Devuelve respuesta HTTP 204 (No Content)
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(null); // Devuelve respuesta HTTP 404 si el préstamo no se encuentra
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null); // Devuelve respuesta HTTP 500 para errores inesperados
-        }
-    }
 
     @GetMapping("/{id}/activo")
     public ResponseEntity<Boolean> esPrestamoActivo(@PathVariable Long id) {
@@ -67,27 +58,30 @@ public class PrestamoController {
             boolean activo = implPrestamo.esPrestamoActivo(id);
             return ResponseEntity.ok(activo);
         } catch (IllegalArgumentException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false); // El préstamo no fue encontrado
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarPrestamo(@PathVariable Long id) {
+        try {
+            implPrestamo.eliminarPrestamo(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PrestamoDTO> modificarPrestamo(
-            @PathVariable Long id,
-            @RequestBody PrestamoDTO prestamoDTO
-    ) {
-        // Llamar al servicio para modificar el préstamo
+    public ResponseEntity<PrestamoDTO> modificarPrestamo(@PathVariable Long id, @RequestBody PrestamoDTO prestamoDTO) {
         ResponseEntity<PrestamoDTO> response = implPrestamo.modificarPrestamo(id, prestamoDTO);
-
-        return response; // Devolver la respuesta del servicio
+        return response;
     }
 
     @PutMapping("/{id}/devolver")
-    public ResponseEntity<?> devolverPrestamo(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> body
-    ) {
+    public ResponseEntity<?> devolverPrestamo(@PathVariable Long id, @RequestBody Map<String, String> body) {
         LocalDate fechaDevolucion = LocalDate.parse(body.get("fecha_devolucion"));
 
         boolean resultado = implPrestamo.devolverPrestamo(id, fechaDevolucion);
@@ -97,80 +91,4 @@ public class PrestamoController {
             return ResponseEntity.status(404).body("Préstamo no encontrado.");
         }
     }
-    /*
-    @Autowired
-    private PrestamoService prestamoService;
-
-    @PostMapping
-    public ResponseEntity<PrestamoDTO> createPrestamo(@RequestBody PrestamoDTO prestamoDTO) {
-        try {
-            PrestamoDTO nuevoPrestamo = prestamoService.createPrestamo(prestamoDTO);
-            return ResponseEntity.ok(nuevoPrestamo); // Devuelve el nuevo préstamo si todo sale bien
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null); // Respuesta 400 si hay un problema
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null); // Respuesta 500 para otros errores inesperados
-        }
-    }
-
-    @GetMapping
-    public ResponseEntity<List<PrestamoDTO>> obtenerTodosLosPrestamos() {
-        List<PrestamoDTO> prestamos = prestamoService.obtenerTodosLosPrestamos();
-        return ResponseEntity.ok(prestamos);
-    }
-
-    @GetMapping("/{id}/activo")
-    public ResponseEntity<Boolean> esPrestamoActivo(@PathVariable Long id) {
-        try {
-            boolean activo = prestamoService.esPrestamoActivo(id);
-            return new ResponseEntity<>(activo, HttpStatus.OK); // Devuelve true o false
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Préstamo no encontrado");
-        }
-    }
-
-
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarPrestamo(@PathVariable Long id) {
-        try {
-            prestamoService.eliminarPrestamo(id); // Llama al servicio para eliminar el préstamo
-            return ResponseEntity.noContent().build(); // Devuelve respuesta HTTP 204 (No Content)
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(null); // Devuelve respuesta HTTP 404 si el préstamo no se encuentra
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(null); // Devuelve respuesta HTTP 500 para errores inesperados
-        }
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<PrestamoDTO> obtenerPrestamoPorId(@PathVariable Long id) {
-        PrestamoDTO prestamoDTO = prestamoService.getPrestamoById(id);
-        return ResponseEntity.ok(prestamoDTO);
-    }
-
-    @PutMapping
-    public ResponseEntity<String> modificarPrestamo(@RequestBody PrestamoDTO prestamoDTO) {
-        if (prestamoDTO.getId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ID del préstamo es requerido");
-        }
-
-        return prestamoService.modificarPrestamo(prestamoDTO);
-    }
-
-
-    @PutMapping("/{id}/devolver")
-    public ResponseEntity<?> devolverPrestamo(
-            @PathVariable Long id,
-            @RequestBody Map<String, String> body
-    ) {
-        LocalDate fechaDevolucion = LocalDate.parse(body.get("fecha_devolucion"));
-
-        boolean resultado = prestamoService.devolverPrestamo(id, fechaDevolucion);
-        if (resultado) {
-            return ResponseEntity.ok("Préstamo devuelto con éxito.");
-        } else {
-            return ResponseEntity.status(404).body("Préstamo no encontrado.");
-        }
-    }*/
 }

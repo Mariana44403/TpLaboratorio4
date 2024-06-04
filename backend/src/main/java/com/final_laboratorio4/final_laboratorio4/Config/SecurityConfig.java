@@ -31,21 +31,18 @@ public class SecurityConfig {
 
                 .csrf(csrf ->
                         csrf
-                        .disable()) // Desactivar CSRF si usas JWT
+                        .disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                // Permite acceso abierto a rutas de q comienzan con "/auth/". Esto es para permitir el registro y el inicio de seion sin autenticacion previa
                                 .requestMatchers("/auth/**").permitAll()
-                                // Requiere autenticacion para todas las demas solicitudes.
-                                .anyRequest().authenticated() // Cualquier ruta fuera de "/auth/" necesitara un tokent JWT valido
+                                .anyRequest().authenticated()
                 )
-                // Indica q la aplicacion no mantendra sesiones
                 .sessionManagement(sessionManager ->
                         sessionManager
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configurar la política de creación de sesiones como stateless
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authenticationProvider(authProvider) // Configurar el AuthenticationProvider
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Añadir el filtro JWT antes del filtro de autenticación por contraseña
-                .build(); // Compila y devuelve la cadena de filtros de seguridad configurada
+                .authenticationProvider(authProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }

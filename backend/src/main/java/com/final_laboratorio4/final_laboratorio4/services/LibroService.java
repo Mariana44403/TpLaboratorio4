@@ -42,13 +42,11 @@ public class LibroService implements ImplLibro {
         libro.setGenero(libroDTO.getGenero());
         libro.setNum_pagina(libroDTO.getNum_pagina());
         libro.setSinopsis(libroDTO.getSinopsis());
-        // Si el estado no está definido, usar "disponible"
         if (libroDTO.getEstado() == null) {
             libro.setEstado("Disponible");
         } else {
             libro.setEstado(libroDTO.getEstado());
         }
-
         Libro libroGuardado = libroRepository.save(libro);
         return libroALibroDTO(libroGuardado);
     }
@@ -60,10 +58,14 @@ public class LibroService implements ImplLibro {
     }
 
     @Override
+    public List<Libro> obtenerLibrosDisponibles() {
+        return libroRepository.findByEstado("Disponible");
+    }
+
+    @Override
     public LibroDTO obtenerLibroPorId(Long id) {
         Libro libro = libroRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Libro con ID: " + id + " no encontrado"));
-
         return libroALibroDTO(libro);
     }
 
@@ -77,18 +79,17 @@ public class LibroService implements ImplLibro {
 
             List<Prestamo> prestamos = prestamoRepository.findByLibroId(id);
             for (Prestamo prestamo : prestamos) {
-                prestamo.setLibro(null); // Desasignar el libro
-                prestamoRepository.save(prestamo); // Guardar cambios
+                prestamo.setLibro(null);
+                prestamoRepository.save(prestamo);
             }
 
             Libro libro = libroRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Libro no encontrado"));
 
-            libroRepository.delete(libro); // Eliminar el libro
+            libroRepository.delete(libro);
 
         } catch (Exception e) {
             System.err.println("Error al eliminar libro: " + e.getMessage());
-            // Aquí puedes decidir cómo manejar el error, por ejemplo, lanzar una excepción personalizada o devolver una respuesta específica al frontend.
         }
     }
 
@@ -107,9 +108,7 @@ public class LibroService implements ImplLibro {
         } else {
             libro.setEstado(libroDTO.getEstado());
         }
-
         Libro libroModificado = libroRepository.save(libro);
-
         return libroALibroDTO(libroModificado);
     }
 
@@ -119,10 +118,9 @@ public class LibroService implements ImplLibro {
 
     @Override
     public List<LibroDTO> obtenerTodosLosLibros() {
-        List<Libro> libros = libroRepository.findAll(); // Obtiene todos los registros del repositorio
-        // Convertir a DTO
+        List<Libro> libros = libroRepository.findAll();
         return libros.stream()
-                .map(this::libroALibroDTO) // Convierte cada libro a su correspondiente DTO
-                .collect(Collectors.toList()); // Recolecta en una lista
+                .map(this::libroALibroDTO)
+                .collect(Collectors.toList());
     }
 }

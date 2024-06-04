@@ -39,15 +39,14 @@ public class LibroController {
         return ResponseEntity.ok(libroDTO);
     }
 
-    @GetMapping // Método HTTP para obtener todos los libros
+    @GetMapping
     public ResponseEntity<List<LibroDTO>> obtenerTodosLosLibros() {
-        List<LibroDTO> libros = implLibro.obtenerTodosLosLibros(); // Llama al servicio para obtener libros
+        List<LibroDTO> libros = implLibro.obtenerTodosLosLibros();
         if (libros == null || libros.isEmpty()) {
-            return ResponseEntity.noContent().build(); // Devuelve 204 si no hay contenido
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(libros); // Devuelve 200 con la lista de libros
+        return ResponseEntity.ok(libros);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<LibroDTO> modificarLibro(
@@ -57,28 +56,32 @@ public class LibroController {
         return ResponseEntity.ok(libroModificado);
     }
 
-
     @GetMapping("/{id}/tienePrestamos")
     public ResponseEntity<Boolean> tienePrestamosActivos(@PathVariable Long id) {
         boolean tienePrestamos = implLibro.tienePrestamosActivos(id);
         return ResponseEntity.ok(tienePrestamos);
     }
 
-    // Eliminar libro si no tiene préstamos activos
+    @GetMapping("/disponibles")
+    public List<Libro> obtenerLibrosDisponibles() {
+        return implLibro.obtenerLibrosDisponibles();
+    }
+
+    // eliminar libro si no tiene prestamos activos
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarLibro(@PathVariable Long id) {
         try {
             implLibro.eliminarLibro(id);
-            return ResponseEntity.noContent().build(); // Código 204: No Content
+            return ResponseEntity.noContent().build();
         } catch (IllegalStateException e) {
-            // No se puede eliminar porque tiene préstamos activos
-            return ResponseEntity.status(409).body(null); // Código 409: Conflict
+            // no lo elimina pq tiene prestamos activos
+            return ResponseEntity.status(409).body(null);
         } catch (IllegalArgumentException e) {
-            // Libro no encontrado
-            return ResponseEntity.status(404).body(null); // Código 404: Not Found
+            // el libro no se encontro
+            return ResponseEntity.status(404).body(null);
         } catch (Exception e) {
-            // Otros errores inesperados
-            return ResponseEntity.status(500).body(null); // Código 500: Internal Server Error
+            // otros errores
+            return ResponseEntity.status(500).body(null);
         }
     }
 }

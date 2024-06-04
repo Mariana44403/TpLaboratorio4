@@ -39,7 +39,7 @@ export default {
           lastname: '',
           phone: '',
         },
-      errorMessage: '', // Para mostrar mensajes de error
+      errorMessage: '', 
     };
   },
   methods: {
@@ -50,12 +50,12 @@ export default {
           this.usuario
         );
         console.log('Usuario agregado:', response.data);
-        this.$router.push('/user'); // Redirige después del registro
+        this.$router.push('/user'); 
       } catch (error) {
         if (error.response && error.response.status === 400) {
-          this.errorMessage = error.response.data; // Muestra el mensaje de error del backend
+          this.errorMessage = error.response.data; 
         } else {
-          this.errorMessage = 'An error occurred during registration.'; // Mensaje genérico para otros errores
+          this.errorMessage = 'An error occurred during registration.'; 
         }
       }
     },

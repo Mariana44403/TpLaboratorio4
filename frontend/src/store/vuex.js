@@ -14,10 +14,10 @@ const store = new Vuex.Store({
   },
   actions: {
     login({ commit }) {
-      commit('setAuthentication', true); // Cambia el estado de autenticación a true
+      commit('setAuthentication', true); // cambia el estado de autenticación a true
     },
     logout({ commit }) {
-      commit('setAuthentication', false); // Cambia el estado de autenticación a false
+      commit('setAuthentication', false); // cambia el estado de autenticación a false
     },
   },
 });

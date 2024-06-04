@@ -53,12 +53,12 @@ export default {
         });
 
         console.log('Administrador registrado:', response.data);
-        this.$router.push('/login'); // Redirige después del registro
+        this.$router.push('/login'); // redirige después del registro
       } catch (error) {
         if (error.response && error.response.status === 400) {
-          this.errorMessage = error.response.data; // Muestra el mensaje de error del backend
+          this.errorMessage = error.response.data; // muestra el mensaje de error del backend
         } else {
-          this.errorMessage = 'Error durante la registración.'; // Mensaje genérico para otros errores
+          this.errorMessage = 'Error durante la registración.'; // mensaje de error generico
         }
       }
     },

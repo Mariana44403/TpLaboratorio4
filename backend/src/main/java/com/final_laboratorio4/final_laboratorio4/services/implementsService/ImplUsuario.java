@@ -10,10 +10,16 @@ import java.util.List;
 
 public interface ImplUsuario{
     Usuario createUser(UsuarioDTO usuarioDTO);
+
     List<Usuario> getAllUsers();
+
     UsuarioDTO obtenerUsuarioPorId(Long id);
+
     UsuarioDTO modificarUsuario(Long id, UsuarioDTO usuarioDTO);
+
     boolean tienePrestamosActivos(Long idUsuario);
+
     ResponseEntity<String> eliminarUsuario(Long id);
+
     List<Usuario> buscarPorQuery(String query);
 }

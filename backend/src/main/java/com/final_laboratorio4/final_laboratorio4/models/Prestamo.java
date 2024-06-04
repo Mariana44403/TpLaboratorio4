@@ -24,7 +24,7 @@ public class Prestamo {
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Usuario usuario;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_libro")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Libro libro;

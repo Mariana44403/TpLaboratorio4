@@ -1,6 +1,5 @@
 <template>
   <div class="loan-list-container">
-    <!-- Encabezado -->
     <div class="header">
       <h2>Lista de prestamos</h2>
       <div class="action-buttons">
@@ -16,7 +15,6 @@
       </div>
     </div>
 
-    <!-- Tabla de prestamos -->
     <table>
       <thead>
         <tr>
@@ -29,7 +27,7 @@
       </thead>
       <tbody>
         <tr v-for="prestamo in prestamosFiltrados" :key="prestamo.id" @click="seleccionarFila(prestamo)" :class="{ selected: filaSeleccionada?.id === prestamo.id }" >
-          <td>{{ prestamo.usuario ? prestamo.usuario.username : 'Usuario desconocido' }}</td> 
+          <td>{{ prestamo.usuario ? prestamo.usuario.username : 'Usuario desconocido' }}</td>
           <td>{{ prestamo.libro ? prestamo.libro.titulo : 'Libro desconocido' }}</td> 
           <td>{{ prestamo.fecha_prestamo }}</td>
           <td>{{ prestamo.fecha_devolucion }}</td>
@@ -38,7 +36,7 @@
       </tbody>
     </table>
 
-    <!-- Ventana para prestamos q pueden ser eliminados -->
+    <!-- ventana para prestamos q pueden ser eliminados -->
     <dialog ref="dialogoEliminacion" v-if="mostrarDialogoEliminacion">
       <p>{{ mensajeConfirmacion }}</p>
       <div class="dialog-buttons">
@@ -47,7 +45,7 @@
       </div>
     </dialog>
 
-    <!-- Ventana para prestamos q estan activos, y no pueden eliminarse -->
+    <!-- ventana para prestamos q estan activos, y no pueden eliminarse -->
     <dialog ref="dialogoPrestamos" v-if="mostrarDialogoPrestamos">
       <p>{{ mensajePrestamos }}</p>
       <div class="dialog-buttons">
@@ -73,7 +71,7 @@ export default {
     };
   },
   async created() {
-    await this.cargarPrestamos(); // Cargar todos los préstamos al inicio
+    await this.cargarPrestamos(); 
     this.prestamosFiltrados = this.prestamos;
   },
   methods: {
@@ -110,8 +108,8 @@ export default {
             `api/prestamo/${this.filaSeleccionada.id}`);
           console.log(response);
           this.cargarPrestamos();
-          this.mostrarDialogoEliminacion = false; // Desactiva el diálogo
-          this.$refs.dialogoEliminacion.close(); // Cerrar el diálogo después de eliminar
+          this.mostrarDialogoEliminacion = false; 
+          this.$refs.dialogoEliminacion.close(); 
         } catch (error) {
           console.error("Error al eliminar préstamo:", error);
         }
@@ -124,12 +122,12 @@ export default {
             `api/prestamo/${this.filaSeleccionada.id}/activo`);
           console.log(response);
           if (response.data) {
-            // El préstamo está activo
+            // el préstamo está activo
             this.mensajePrestamos = "Este préstamo está activo y no puede ser eliminado.";
             this.mostrarDialogoPrestamos = true;
             this.mostrarDialogoEliminacion = false;
           } else {
-            // El préstamo no está activo, se puede eliminar
+            // el préstamo no está activo, se puede eliminar
             this.mensajeConfirmacion = "¿Está seguro de que desea eliminar este préstamo?";
             this.permiteEliminacion = true;
             this.mostrarDialogoPrestamos = false;
@@ -182,7 +180,7 @@ export default {
 
 .header {
   display: flex;
-  justify-content: space-between; /* Para alinear el título y los botones */
+  justify-content: space-between; 
   align-items: center;
 }
 
@@ -192,7 +190,7 @@ export default {
 }
 
 .action-buttons button {
-  margin-left: 10px; /* Espaciado entre botones */
+  margin-left: 10px; 
   padding: 3px 20px; 
   background-color: #1F618D; 
   color: white;
@@ -231,12 +229,12 @@ th {
 }
 
 .selected {
-  background-color: #E5E8E8; /* Para resaltar la fila seleccionada */
+  background-color: #E5E8E8; 
 }
 
 dialog {
   display: flex;
-  flex-direction: column; /* Los elementos dentro del diálogo se alinean verticalmente */
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
   background-color: white;
@@ -247,16 +245,16 @@ dialog {
 }
 
 .dialog-buttons {
-  display: flex; /* Alineación horizontal */
-  flex-direction: row; /* Botones uno al lado del otro */
-  justify-content: space-between; /* Espaciado uniforme entre botones */
+  display: flex; 
+  flex-direction: row; 
+  justify-content: space-between; 
 }
 
 dialog button {
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
-  background-color: #f44336; /* Color rojo para el botón de eliminación */
+  background-color: #f44336; 
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
@@ -269,15 +267,15 @@ dialog button {
 }
 
 .dialog-no:hover {
-  background-color:#BFC9CA; /* Cambia el color cuando se pasa el ratón */
+  background-color:#BFC9CA;
 }
 
 .dialog-si:hover {
-  background-color:#C0392B; /* Cambia el color cuando se pasa el ratón */
+  background-color:#C0392B; 
 }
 
 .dialog-buttons button {
-  margin: 0 10px; /* Margen entre botones para mantener el espacio */
+  margin: 0 10px; 
 }
 
 </style>

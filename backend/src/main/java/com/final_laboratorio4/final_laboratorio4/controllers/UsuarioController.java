@@ -25,13 +25,13 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Usuario> createUser(@RequestBody UsuarioDTO userDTO) {
         Usuario newUser = implUsuario.createUser(userDTO);
-        return ResponseEntity.ok(newUser); // Devuelve el usuario recién creado
+        return ResponseEntity.ok(newUser);
     }
 
     @GetMapping
     public ResponseEntity<List<Usuario>> getAllUsers() {
         List<Usuario> usuarios = implUsuario.getAllUsers();
-        return ResponseEntity.ok(usuarios); // Devuelve todos los usuarios
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/search")
@@ -39,7 +39,6 @@ public class UsuarioController {
         List<Usuario> usuariosFiltrados = implUsuario.buscarPorQuery(query);
         return new ResponseEntity<>(usuariosFiltrados, HttpStatus.OK);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> modificarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
