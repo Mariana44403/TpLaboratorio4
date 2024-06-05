@@ -22,8 +22,12 @@ public interface PrestamoRepository extends JpaRepository<Prestamo, Long> {
     @Query("SELECT p FROM Prestamo p JOIN p.usuario u JOIN p.libro l " +
             "WHERE LOWER(u.username) LIKE LOWER(CONCAT(:query, '%')) " +
             "OR LOWER(l.titulo) LIKE LOWER(CONCAT(:query, '%')) " +
+            "OR LOWER(p.libroTitulo) LIKE LOWER(CONCAT(:query, '%')) " +
+            "OR LOWER(p.nombreUsuario) LIKE LOWER(CONCAT(:query, '%')) " +
             "OR LOWER(STR(p.fecha_prestamo)) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(STR(p.fecha_devolucion)) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(p.estado) LIKE LOWER(CONCAT(:query, '%'))")
     List<Prestamo> buscarPorQuery(String query);
+
+
 }

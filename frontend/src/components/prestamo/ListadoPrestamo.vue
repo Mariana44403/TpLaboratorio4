@@ -14,7 +14,7 @@
         </button>
       </div>
     </div>
-
+    
     <table>
       <thead>
         <tr>
@@ -27,8 +27,8 @@
       </thead>
       <tbody>
         <tr v-for="prestamo in prestamosFiltrados" :key="prestamo.id" @click="seleccionarFila(prestamo)" :class="{ selected: filaSeleccionada?.id === prestamo.id }" >
-          <td>{{ prestamo.usuario ? prestamo.usuario.username : 'Usuario desconocido' }}</td>
-          <td>{{ prestamo.libro ? prestamo.libro.titulo : 'Libro desconocido' }}</td> 
+          <td>{{ prestamo.usuario ? prestamo.usuario.username : prestamo.nombreUsuario }}</td>
+          <td>{{ prestamo.libro ? prestamo.libro.titulo : prestamo.libroTitulo }}</td>
           <td>{{ prestamo.fecha_prestamo }}</td>
           <td>{{ prestamo.fecha_devolucion }}</td>
           <td>{{ prestamo.estado }}</td> 

@@ -93,6 +93,9 @@ export default {
           this.errorMessage = "Error al crear el préstamo.";
         }
       }
+    },
+    cancelar() {
+      this.$router.push("/prestamo");
     }
   },
 };

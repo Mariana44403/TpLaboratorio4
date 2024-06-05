@@ -24,10 +24,15 @@ public class Prestamo {
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Usuario usuario;
 
+    private String nombreUsuario;
+
     @OneToOne
     @JoinColumn(name = "id_libro")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Libro libro;
+
+    @Column(name = "libro_titulo")  // Asegúrate de que este nombre coincide con la columna de tu base de datos
+    private String libroTitulo;
 
     @Column(name = "fecha_prestamo")
     private LocalDate fecha_prestamo;

@@ -13,7 +13,9 @@ import java.time.LocalDate;
 public class PrestamoDTO {
     private Long id;
     private Integer id_usuario;
+    private String nombreUsuario;
     private Long id_libro;
+    private String tituloLibro;
     private LocalDate fecha_prestamo;
     private LocalDate fecha_devolucion;
     private String estado;

@@ -42,6 +42,7 @@ public class LibroService implements ImplLibro {
         libro.setGenero(libroDTO.getGenero());
         libro.setNum_pagina(libroDTO.getNum_pagina());
         libro.setSinopsis(libroDTO.getSinopsis());
+
         if (libroDTO.getEstado() == null) {
             libro.setEstado("Disponible");
         } else {
@@ -79,6 +80,7 @@ public class LibroService implements ImplLibro {
 
             List<Prestamo> prestamos = prestamoRepository.findByLibroId(id);
             for (Prestamo prestamo : prestamos) {
+                prestamo.setLibroTitulo(prestamo.getLibro().getTitulo());
                 prestamo.setLibro(null);
                 prestamoRepository.save(prestamo);
             }

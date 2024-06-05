@@ -98,6 +98,7 @@ public class UsuarioService implements ImplUsuario {
 
             List<Prestamo> prestamos = prestamoRepository.findByUsuarioId(id);
             for (Prestamo prestamo : prestamos) {
+                prestamo.setNombreUsuario(prestamo.getUsuario().getUsername());
                 prestamo.setUsuario(null);
                 prestamoRepository.save(prestamo);
             }

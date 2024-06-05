@@ -22,13 +22,9 @@
         <label>Fecha del préstamo:</label>
         <input type="date" id="fecha_prestamo" v-model="prestamo.fecha_prestamo" required>
       </div>
-      <div class="form-field">
+      <div class="form-field" v-if="mostrarFechaDevolucion">
         <label>Fecha de devolución:</label>
-        <input type="date" id="fecha_devolucion" v-model="prestamo.fecha_devolucion" required>
-      </div>
-      <div class="form-field">
-        <label>Estado del préstamo:</label>
-        <input type="text" id="estado" v-model="prestamo.estado">
+        <input type="date" id="fecha_devolucion" v-model="prestamo.fecha_devolucion">
       </div>
       <div class="buttons">
         <button type="submit" class="submit-button">Actualizar</button> 
@@ -38,6 +34,7 @@
     </form>
   </div>
 </template>
+
 <script>
 import axios from '../../axios'; 
 export default {
@@ -48,6 +45,11 @@ export default {
       prestamo: {}, 
       errorMessage: "", 
     };
+  },
+  computed: {
+    mostrarFechaDevolucion() {
+      return this.prestamo.fecha_devolucion !== null;
+    }
   },
   async created() {
     await this.cargarUsuarios(); 
@@ -104,6 +106,9 @@ export default {
         this.errorMessage = "No se pudo actualizar el préstamo.";
       }
     },
+    cancelar() {
+      this.$router.push("/prestamo");
+    }
   },
 };
 </script>
